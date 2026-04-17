@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://decarrm.github.io/navisworks-mcp-toolkit/sitemap.xml
