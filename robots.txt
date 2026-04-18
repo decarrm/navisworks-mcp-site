@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://decarrm.github.io/navisworks-mcp-toolkit/sitemap.xml
+Sitemap: https://navisworks-mcp-site.pages.dev/sitemap.xml
