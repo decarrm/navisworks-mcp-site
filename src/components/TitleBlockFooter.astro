@@ -1,0 +1,138 @@
+---
+interface Props {
+  sheet?: string;
+  of?: string;
+  revision?: string;
+  drawing?: string;
+  scale?: string;
+}
+const {
+  sheet = "01",
+  of = "05",
+  revision = "R.02",
+  drawing = "LANDING",
+  scale = "1 : 1",
+} = Astro.props;
+
+const year = new Date().getUTCFullYear();
+---
+
+<footer class="title-block">
+  <div class="sheet title-block__inner">
+    <div class="title-block__grid">
+      <div class="title-block__cell title-block__project">
+        <span class="mono-caps title-block__label">Project</span>
+        <span class="title-block__value">Navisworks MCP Toolkit</span>
+        <span class="title-block__sub mono-caps">A natural-language interface to Autodesk clash detection</span>
+      </div>
+
+      <div class="title-block__cell">
+        <span class="mono-caps title-block__label">Drawing</span>
+        <span class="title-block__value num-read">{drawing}</span>
+      </div>
+
+      <div class="title-block__cell">
+        <span class="mono-caps title-block__label">Sheet</span>
+        <span class="title-block__value num-read">{sheet} / {of}</span>
+      </div>
+
+      <div class="title-block__cell">
+        <span class="mono-caps title-block__label">Scale</span>
+        <span class="title-block__value num-read">{scale}</span>
+      </div>
+
+      <div class="title-block__cell">
+        <span class="mono-caps title-block__label">Revision</span>
+        <span class="title-block__value num-read">{revision}</span>
+      </div>
+
+      <div class="title-block__cell">
+        <span class="mono-caps title-block__label">Drawn by</span>
+        <span class="title-block__value">M. Decarrier</span>
+        <span class="title-block__sub mono-caps">ITER · BIM/PLM</span>
+      </div>
+
+      <div class="title-block__cell title-block__links">
+        <span class="mono-caps title-block__label">Refs</span>
+        <a href="https://github.com/decarrm/navisworks-mcp-toolkit">GitHub Repository</a>
+        <a href="https://github.com/decarrm/navisworks-mcp-toolkit/blob/main/LICENSE">MIT License</a>
+        <a href="/docs">Documentation</a>
+      </div>
+
+      <div class="title-block__cell title-block__legal">
+        <span class="mono-caps title-block__label">Notes</span>
+        <p>Navisworks® and Autodesk® are trademarks of Autodesk, Inc. This project is not affiliated with or endorsed by Autodesk.</p>
+        <p class="title-block__copy mono-caps">© {year} · ALL SHEETS </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .title-block {
+    margin-top: clamp(56px, 10vw, 128px);
+    border-top: 1.5px solid var(--color-ink);
+    background: var(--color-paper);
+  }
+  .title-block__inner { padding-block: 0; }
+  .title-block__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 0.9fr 0.6fr 0.6fr;
+    grid-auto-rows: minmax(96px, auto);
+    border-left: 1.5px solid var(--color-ink);
+    border-right: 1.5px solid var(--color-ink);
+  }
+  .title-block__cell {
+    border-right: 1px solid var(--color-rule);
+    border-bottom: 1px solid var(--color-rule);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--color-ink);
+  }
+  .title-block__cell:nth-child(4n) { border-right: 0; }
+  .title-block__label { color: var(--color-ink-soft); }
+  .title-block__value {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.1;
+  }
+  .title-block__sub {
+    color: var(--color-ink-soft);
+    font-size: 10px;
+  }
+
+  .title-block__project { grid-column: 1 / 3; }
+  .title-block__links {
+    grid-column: 1 / 3;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .title-block__links a {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    border-bottom: 1px dashed var(--color-rule);
+    padding-bottom: 2px;
+    width: fit-content;
+  }
+  .title-block__links a:hover { color: var(--color-safety); border-color: var(--color-safety); }
+
+  .title-block__legal {
+    grid-column: 3 / 5;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-ink-soft);
+  }
+  .title-block__legal p { margin: 0; }
+  .title-block__copy { margin-top: 6px !important; color: var(--color-ink); }
+
+  @media (max-width: 860px) {
+    .title-block__grid { grid-template-columns: 1fr 1fr; }
+    .title-block__cell:nth-child(4n) { border-right: 1px solid var(--color-rule); }
+    .title-block__cell:nth-child(2n) { border-right: 0; }
+    .title-block__project,
+    .title-block__links,
+    .title-block__legal { grid-column: 1 / 3; }
+  }
+</style>

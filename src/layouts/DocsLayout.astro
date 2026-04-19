@@ -1,0 +1,102 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface NavItem { slug: string; title: string; num: string; }
+interface Props {
+  title: string;
+  description?: string;
+  items: NavItem[];
+  currentSlug: string;
+}
+const { title, description, items, currentSlug } = Astro.props;
+---
+
+<BaseLayout title={`${title} · Navisworks MCP Docs`} description={description} drawing="DOCS" sheet="04" revision="R.01">
+  <div class="sheet docs">
+    <aside class="docs__side">
+      <div class="docs__section mono-caps">Documentation</div>
+      <ul class="docs__list">
+        {items.map((it) => (
+          <li>
+            <a class={`docs__link${it.slug === currentSlug ? ' is-active' : ''}`} href={`/docs/${it.slug}`}>
+              <span class="mono-caps docs__ref">{it.num}</span>
+              <span>{it.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="docs__hint mono-caps">Need help? <br /><a href="https://github.com/decarrm/navisworks-mcp-toolkit/issues">Open an issue</a></div>
+    </aside>
+
+    <article class="docs__article">
+      <div class="docs__breadcrumb mono-caps">
+        <a href="/docs">/ docs</a>
+        <span> / </span>
+        <span>{currentSlug}</span>
+      </div>
+      <h1 class="docs__title">{title}</h1>
+      <div class="dim-rule docs__dim" aria-hidden="true"></div>
+      <div class="prose">
+        <slot />
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .docs {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    padding-top: 48px;
+    padding-bottom: 96px;
+  }
+  .docs__side {
+    position: sticky;
+    top: 96px;
+    align-self: start;
+    border-left: 1px solid var(--color-ink);
+    padding-left: 18px;
+    display: grid;
+    gap: 22px;
+  }
+  .docs__section { color: var(--color-safety); letter-spacing: 0.2em; }
+  .docs__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .docs__link {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    padding: 4px 0;
+    border-bottom: 1px dashed transparent;
+    color: var(--color-ink);
+  }
+  .docs__ref { color: var(--color-ink-soft); }
+  .docs__link:hover { border-bottom-color: var(--color-ink); }
+  .docs__link.is-active { color: var(--color-blueprint); }
+  .docs__link.is-active .docs__ref { color: var(--color-safety); }
+
+  .docs__hint { font-size: 10.5px; color: var(--color-ink-soft); line-height: 1.6; }
+  .docs__hint a { color: var(--color-blueprint); border-bottom: 1px dashed var(--color-blueprint); }
+
+  .docs__article { min-width: 0; }
+  .docs__breadcrumb {
+    color: var(--color-ink-soft);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+  }
+  .docs__breadcrumb a:hover { color: var(--color-safety); }
+  .docs__title {
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    margin: 12px 0 14px;
+    line-height: 0.95;
+  }
+  .docs__dim { margin-bottom: 28px; }
+
+  @media (max-width: 900px) {
+    .docs { grid-template-columns: 1fr; gap: 24px; }
+    .docs__side { position: static; border-left: 0; padding-left: 0; border-top: 1px solid var(--color-ink); padding-top: 16px; }
+  }
+</style>

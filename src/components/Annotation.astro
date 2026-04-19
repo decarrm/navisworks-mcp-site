@@ -1,0 +1,31 @@
+---
+interface Props {
+  label: string;
+  value?: string;
+  tone?: "ink" | "blueprint" | "safety";
+}
+const { label, value, tone = "ink" } = Astro.props;
+---
+
+<span class={`anno anno--${tone}`}>
+  <span class="anno__tag mono-caps">{label}</span>
+  {value && <span class="anno__val num-read">{value}</span>}
+</span>
+
+<style>
+  .anno {
+    display: inline-grid;
+    grid-auto-flow: column;
+    align-items: baseline;
+    gap: 6px;
+    padding: 2px 6px;
+    border: 1px solid var(--color-ink);
+    background: var(--color-paper-shade);
+  }
+  .anno__tag { color: var(--color-ink-soft); font-size: 9.5px; }
+  .anno__val { font-size: 11.5px; }
+  .anno--blueprint { border-color: var(--color-blueprint); }
+  .anno--blueprint .anno__tag { color: var(--color-blueprint); }
+  .anno--safety { border-color: var(--color-safety); background: #fff; }
+  .anno--safety .anno__tag { color: var(--color-safety); }
+</style>

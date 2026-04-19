@@ -1,0 +1,61 @@
+---
+interface Props {
+  label?: string;
+  filename?: string;
+  lang?: string;
+  code: string;
+}
+const { label = "TERMINAL", filename, lang = "bash", code } = Astro.props;
+
+const lines = code.replace(/\n$/, "").split("\n");
+---
+
+<div class="cb" data-lang={lang}>
+  <div class="cb__bar mono-caps">
+    <span class="cb__dot" aria-hidden="true"></span>
+    <span class="cb__label">{label}</span>
+    {filename && <span class="cb__file">{filename}</span>}
+    <span class="cb__lang">{lang}</span>
+  </div>
+  <pre class="cb__pre" aria-label={`Code sample in ${lang}`}><code>{lines.map((ln, i) => (
+    <span class="cb__line"><span class="cb__ln num-read">{String(i + 1).padStart(2, "0")}</span><span class="cb__code">{ln || " "}</span></span>
+  ))}</code></pre>
+</div>
+
+<style>
+  .cb {
+    border: 1.5px solid var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+  }
+  .cb__bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-paper) 18%, transparent);
+    font-size: 10px;
+    color: color-mix(in oklab, var(--color-paper) 70%, transparent);
+  }
+  .cb__dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--color-safety);
+    box-shadow: 14px 0 var(--color-paper), 28px 0 color-mix(in oklab, var(--color-paper) 40%, transparent);
+  }
+  .cb__label { margin-left: 36px; color: var(--color-paper); letter-spacing: 0.18em; }
+  .cb__file  { color: color-mix(in oklab, var(--color-paper) 70%, transparent); }
+  .cb__lang  { margin-left: auto; color: var(--color-safety); }
+
+  .cb__pre {
+    margin: 0;
+    padding: 20px 18px 22px;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .cb__line { display: grid; grid-template-columns: 28px 1fr; gap: 14px; }
+  .cb__ln { color: color-mix(in oklab, var(--color-paper) 35%, transparent); user-select: none; }
+  .cb__code { white-space: pre; }
+</style>

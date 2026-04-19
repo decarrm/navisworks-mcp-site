@@ -1,0 +1,123 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import TitleBlockFooter from "../components/TitleBlockFooter.astro";
+import GridOverlay from "../components/GridOverlay.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  sheet?: string;
+  of?: string;
+  drawing?: string;
+  revision?: string;
+  scale?: string;
+  noFooter?: boolean;
+}
+
+const {
+  title = "Navisworks MCP Toolkit — Clash Queries in Natural Language",
+  description = "An MCP-compatible Python server that lets AI clients query Navisworks clash tests and models in natural language. Pay-as-you-go billing from €0.01 per call.",
+  sheet = "01",
+  of = "05",
+  drawing = "LANDING",
+  revision = "R.02",
+  scale = "1 : 1",
+  noFooter = false,
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://navisworks-mcp-site.pages.dev";
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImage = `${siteUrl}/logo.svg`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f1ede4" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Navisworks MCP Toolkit" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Navisworks MCP Toolkit",
+      "description": description,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Cross-platform",
+      "url": canonical,
+      "author": { "@type": "Person", "name": "Maxime Decarrier" },
+      "offers": {
+        "@type": "Offer",
+        "price": "0.01",
+        "priceCurrency": "EUR",
+        "description": "Pay-as-you-go: €0.01 per tool call. Free tier: 100 calls/month."
+      }
+    })} />
+  </head>
+
+  <body>
+    <GridOverlay />
+    <Nav />
+    <main class="page">
+      <slot />
+    </main>
+    {!noFooter && <TitleBlockFooter sheet={sheet} of={of} drawing={drawing} revision={revision} scale={scale} />}
+
+    <script is:inline>
+      // Enhance pricing checkout buttons: submit via fetch and redirect on success.
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("form[data-checkout]").forEach((form) => {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const tier = form.querySelector('input[name="tier"]').value;
+            const btn = form.querySelector("button");
+            const original = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "OPENING CHECKOUT…";
+            try {
+              const r = await fetch("/api/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ tier }),
+              });
+              const data = await r.json();
+              if (r.ok && data.url) {
+                window.location.href = data.url;
+                return;
+              }
+              alert(data?.todo || data?.error || "Checkout is not available. Please try again later.");
+            } catch (err) {
+              alert("Network error. Please try again.");
+            } finally {
+              btn.disabled = false;
+              btn.textContent = original;
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .page { position: relative; z-index: 2; }
+</style>

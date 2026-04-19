@@ -1,0 +1,48 @@
+---
+interface Props {
+  num: string;
+  title: string;
+  dim?: string;
+  kicker?: string;
+  id?: string;
+}
+const { num, title, dim = "1200 mm", kicker, id } = Astro.props;
+---
+
+<header class="section-header" id={id}>
+  <div class="section-header__meta">
+    <span class="mono-caps section-header__num">§ {num}</span>
+    <span class="dim-rule section-header__rule" aria-hidden="true" style={`--dash:6px;--gap:5px;`}></span>
+    <span class="mono-caps section-header__dim num-read">{dim}</span>
+  </div>
+  <h2 class="section-header__title">{title}</h2>
+  {kicker && <p class="section-header__kicker mono-caps">{kicker}</p>}
+</header>
+
+<style>
+  .section-header {
+    display: grid;
+    gap: 14px;
+    padding-top: clamp(40px, 8vw, 96px);
+    padding-bottom: 28px;
+  }
+  .section-header__meta {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    color: var(--color-ink);
+  }
+  .section-header__num { color: var(--color-blueprint); font-weight: 600; }
+  .section-header__dim { color: var(--color-ink-soft); }
+  .section-header__title {
+    font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+    line-height: 0.92;
+    max-width: 20ch;
+  }
+  .section-header__kicker {
+    color: var(--color-ink-soft);
+    max-width: 60ch;
+    letter-spacing: 0.08em;
+  }
+</style>
