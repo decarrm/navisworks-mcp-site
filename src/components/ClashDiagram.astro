@@ -17,7 +17,7 @@
         <path d="M20 0H0V20" fill="none" stroke="rgba(11,11,11,0.08)" stroke-width="0.5" />
       </pattern>
       <pattern id="cl-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
-        <line x1="0" y1="0" x2="0" y2="6" stroke="#0b0b0b" stroke-width="1" />
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
       </pattern>
       <marker id="cl-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
         <path d="M0 0 L10 5 L0 10 Z" fill="#0b0b0b" />
@@ -28,29 +28,29 @@
     <rect x="0" y="0" width="720" height="520" fill="url(#cl-grid)" />
 
     <!-- Isometric axes -->
-    <g class="clash__axes" stroke="#0b0b0b" stroke-width="1" fill="none">
+    <g class="clash__axes" stroke="#64748b" stroke-width="1" fill="none">
       <line x1="60" y1="460" x2="680" y2="460" stroke-dasharray="4 4" opacity="0.6"/>
       <line x1="60" y1="460" x2="60" y2="40"  stroke-dasharray="4 4" opacity="0.6"/>
       <line x1="60" y1="460" x2="360" y2="260" stroke-dasharray="4 4" opacity="0.6"/>
-      <text x="690" y="464" font-family="IBM Plex Mono, monospace" font-size="11" fill="#0b0b0b">X</text>
-      <text x="48" y="32"  font-family="IBM Plex Mono, monospace" font-size="11" fill="#0b0b0b">Z</text>
-      <text x="370" y="254" font-family="IBM Plex Mono, monospace" font-size="11" fill="#0b0b0b">Y</text>
+      <text x="690" y="464" font-family="IBM Plex Mono, monospace" font-size="11" fill="#64748b">X</text>
+      <text x="48" y="32"  font-family="IBM Plex Mono, monospace" font-size="11" fill="#64748b">Z</text>
+      <text x="370" y="254" font-family="IBM Plex Mono, monospace" font-size="11" fill="#64748b">Y</text>
     </g>
 
-    <!-- STRUCTURAL BEAM (blueprint blue, running along X) -->
-    <g class="clash__beam" stroke="#1e3a8a" stroke-width="1.5" fill="none" stroke-linejoin="miter">
+    <!-- STRUCTURAL BEAM (blue, running along X) -->
+    <g class="clash__beam" stroke="#3b82f6" stroke-width="1.5" fill="none" stroke-linejoin="miter">
       <!-- Top flange -->
       <path d="M120 300 L560 300 L620 260 L180 260 Z" />
       <!-- Front face -->
-      <path d="M120 300 L560 300 L560 340 L120 340 Z" fill="url(#cl-hatch)" fill-opacity="0.08" />
+      <path d="M120 300 L560 300 L560 340 L120 340 Z" fill="#3b82f6" fill-opacity="0.08" />
       <!-- Side (iso) -->
       <path d="M560 300 L620 260 L620 300 L560 340 Z" />
       <!-- Web center line -->
       <line x1="140" y1="320" x2="580" y2="320" stroke-dasharray="3 4" />
     </g>
 
-    <!-- HVAC DUCT (orange, running along Y at an angle, passing through beam) -->
-    <g class="clash__duct" stroke="#d9531e" stroke-width="1.5" fill="none" stroke-linejoin="miter">
+    <!-- HVAC DUCT (amber, running along Y at an angle, passing through beam) -->
+    <g class="clash__duct" stroke="#f59e0b" stroke-width="1.5" fill="none" stroke-linejoin="miter">
       <!-- Top -->
       <path d="M300 440 L440 340 L520 340 L380 440 Z" />
       <!-- Left side -->
@@ -64,14 +64,14 @@
 
     <!-- CLASH SPHERE -->
     <g class="clash__sphere">
-      <circle cx="432" cy="322" r="28" fill="none" stroke="#d9531e" stroke-width="1.5" stroke-dasharray="3 3" />
-      <circle cx="432" cy="322" r="4"  fill="#d9531e" />
-      <line x1="412" y1="322" x2="452" y2="322" stroke="#d9531e" stroke-width="1" />
-      <line x1="432" y1="302" x2="432" y2="342" stroke="#d9531e" stroke-width="1" />
+      <circle cx="432" cy="322" r="28" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" />
+      <circle cx="432" cy="322" r="4"  fill="#f59e0b" />
+      <line x1="412" y1="322" x2="452" y2="322" stroke="#f59e0b" stroke-width="1" />
+      <line x1="432" y1="302" x2="432" y2="342" stroke="#f59e0b" stroke-width="1" />
     </g>
 
     <!-- DIMENSION LINES -->
-    <g class="clash__dims" stroke="#0b0b0b" stroke-width="1" fill="#0b0b0b" font-family="IBM Plex Mono, monospace" font-size="10">
+    <g class="clash__dims" stroke="#64748b" stroke-width="1" fill="#64748b" font-family="IBM Plex Mono, monospace" font-size="10">
       <!-- X dim (beam span) -->
       <line x1="120" y1="496" x2="560" y2="496" marker-start="url(#cl-arrow)" marker-end="url(#cl-arrow)" />
       <text x="340" y="490" text-anchor="middle">8 400 mm</text>
@@ -85,20 +85,20 @@
 
     <!-- COORDINATE CALLOUT -->
     <g class="clash__call">
-      <line x1="432" y1="322" x2="560" y2="170" stroke="#0b0b0b" stroke-width="1" />
-      <circle cx="560" cy="170" r="3" fill="#0b0b0b" />
-      <rect x="566" y="140" width="140" height="60" fill="#f1ede4" stroke="#0b0b0b" stroke-width="1" />
-      <text x="576" y="158" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b" letter-spacing="0.12em">CLASH · CL-001</text>
-      <text x="576" y="174" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b">X  1240</text>
-      <text x="576" y="188" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b">Y   308</text>
-      <text x="646" y="174" font-family="IBM Plex Mono, monospace" font-size="10" fill="#d9531e">Z    45</text>
-      <text x="646" y="188" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b">Δ  22 mm</text>
+      <line x1="432" y1="322" x2="560" y2="170" stroke="#64748b" stroke-width="1" />
+      <circle cx="560" cy="170" r="3" fill="#64748b" />
+      <rect x="566" y="140" width="140" height="60" fill="#111927" stroke="#64748b" stroke-width="1" />
+      <text x="576" y="158" font-family="IBM Plex Mono, monospace" font-size="10" fill="#94a3b8" letter-spacing="0.12em">CLASH · CL-001</text>
+      <text x="576" y="174" font-family="IBM Plex Mono, monospace" font-size="10" fill="#94a3b8">X  1240</text>
+      <text x="576" y="188" font-family="IBM Plex Mono, monospace" font-size="10" fill="#94a3b8">Y   308</text>
+      <text x="646" y="174" font-family="IBM Plex Mono, monospace" font-size="10" fill="#f59e0b">Z    45</text>
+      <text x="646" y="188" font-family="IBM Plex Mono, monospace" font-size="10" fill="#94a3b8">Δ  22 mm</text>
     </g>
 
     <!-- ELEMENT LABELS -->
-    <g font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b" letter-spacing="0.1em">
-      <text x="140" y="286" fill="#1e3a8a">W310 · STEEL BEAM</text>
-      <text x="320" y="462" fill="#d9531e">DUCT · 400 × 300</text>
+    <g font-family="IBM Plex Mono, monospace" font-size="10" fill="#3b82f6" letter-spacing="0.1em">
+      <text x="140" y="286">W310 · STEEL BEAM</text>
+      <text x="320" y="462" fill="#f59e0b">DUCT · 400 × 300</text>
     </g>
   </svg>
 
@@ -110,23 +110,23 @@
 <style>
   .clash {
     margin: 0;
-    border: 1.5px solid var(--color-ink);
-    background: var(--color-paper);
+    border: 1.5px solid var(--color-border-mid);
+    background: var(--color-viewport);
     position: relative;
   }
   .clash__meta {
     display: flex;
     gap: 0;
-    border-bottom: 1px solid var(--color-ink);
-    background: var(--color-paper-shade);
+    border-bottom: 1px solid var(--color-border-mid);
+    background: var(--color-panel);
   }
   .clash__tag {
     padding: 8px 12px;
-    border-right: 1px solid var(--color-ink);
-    color: var(--color-ink);
+    border-right: 1px solid var(--color-border-mid);
+    color: var(--color-text-dim);
     font-size: 10px;
   }
-  .clash__tag--safety { color: var(--color-safety); }
+  .clash__tag--safety { color: var(--color-clash); }
   .clash__tag:last-child { border-right: 0; }
 
   .clash__svg {
@@ -136,17 +136,17 @@
   }
   .clash__caption {
     padding: 10px 14px;
-    border-top: 1px solid var(--color-ink);
-    color: var(--color-ink-soft);
-    background: var(--color-paper-shade);
+    border-top: 1px solid var(--color-border-mid);
+    color: var(--color-text-dim);
+    background: var(--color-panel);
   }
   .clash__caption code {
     font-family: var(--font-mono);
-    background: var(--color-paper);
-    border: 1px solid var(--color-rule);
+    background: var(--color-panel);
+    border: 1px solid var(--color-border);
     padding: 1px 5px;
     font-size: 10.5px;
-    color: var(--color-blueprint);
+    color: var(--color-accent);
   }
 
   /* Draw-in animation */

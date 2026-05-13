@@ -2,6 +2,7 @@
 
 @import "@fontsource-variable/fraunces/full.css";
 @import "@fontsource-variable/fraunces/full-italic.css";
+@import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "@fontsource/ibm-plex-mono/600.css";
@@ -10,27 +11,59 @@
 @import "@fontsource/ibm-plex-sans/600.css";
 
 @theme {
-  --color-paper: #f1ede4;
-  --color-paper-shade: #e9e3d4;
-  --color-ink: #0b0b0b;
-  --color-ink-soft: #2a2a2a;
-  --color-blueprint: #1e3a8a;
-  --color-blueprint-ink: #17306f;
-  --color-safety: #d9531e;
-  --color-safety-ink: #b8420f;
-  --color-rule: rgba(11, 11, 11, 0.14);
-  --color-rule-soft: rgba(11, 11, 11, 0.06);
+  /* ── Dark viewport palette ─────────────────────────────────────── */
+  --color-void:        #080c12;
+  --color-viewport:    #0d1421;
+  --color-panel:       #111927;
+  --color-panel-edge:   #1e293b;
 
-  --font-display: "Fraunces Variable", "Fraunces", ui-serif, Georgia, serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-grid:        #1a2740;
 
-  --tracking-tightest: -0.035em;
-  --tracking-wider-mono: 0.14em;
+  /* Axis / element colours */
+  --color-axis-x:      #ef4444;
+  --color-axis-y:      #22c55e;
+  --color-axis-z:      #3b82f6;
+
+  /* Clash states */
+  --color-clash:       #f59e0b;
+  --color-clash-hot:   #ef4444;
+  --color-safe:        #10b981;
+
+  /* Text */
+  --color-text:        #e2e8f0;
+  --color-text-dim:    #64748b;
+
+  /* Accent / HUD */
+  --color-accent:      #38bdf8;
+  --color-accent-dim:  #1e4a6e;
+
+  /* Borders */
+  --color-border:      rgba(255,255,255,0.08);
+  --color-border-mid:  rgba(255,255,255,0.14);
+
+  /* ── Legacy paper colours (kept for backward compat) ─────────────── */
+  --color-paper:        #0d1421;
+  --color-paper-shade:  #111927;
+  --color-ink:          #e2e8f0;
+  --color-ink-soft:     #94a3b8;
+  --color-blueprint:    #3b82f6;
+  --color-blueprint-ink:#1e4a6e;
+  --color-safety:       #f59e0b;
+  --color-safety-ink:   #b47200;
+  --color-rule:         rgba(255,255,255,0.10);
+  --color-rule-soft:    rgba(255,255,255,0.05);
+
+  /* ── Typography ──────────────────────────────────────────────────── */
+  --font-display: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+  --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --tracking-tightest: -0.025em;
+  --tracking-wider-mono: 0.12em;
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   --grid-unit: 8px;
   --page-max: 1240px;
   --page-pad: clamp(24px, 4vw, 56px);
@@ -38,8 +71,8 @@
 
 @layer base {
   html {
-    background: var(--color-paper);
-    color: var(--color-ink);
+    background: var(--color-void);
+    color: var(--color-text);
     font-family: var(--font-mono);
     font-feature-settings: "ss01", "ss02", "cv01", "cv11";
     -webkit-font-smoothing: antialiased;
@@ -49,22 +82,23 @@
   body {
     margin: 0;
     min-height: 100dvh;
-    background:
-      linear-gradient(var(--color-rule-soft) 1px, transparent 1px) 0 0 / 100% var(--grid-unit),
-      linear-gradient(90deg, var(--color-rule-soft) 1px, transparent 1px) 0 0 / var(--grid-unit) 100%,
-      var(--color-paper);
+    background-color: var(--color-void);
+    background-image:
+      linear-gradient(var(--color-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+    background-size: 40px 40px;
     background-attachment: fixed;
     overflow-x: hidden;
   }
 
   ::selection {
-    background: var(--color-blueprint);
-    color: var(--color-paper);
+    background: var(--color-accent);
+    color: var(--color-void);
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 450;
+    font-weight: 700;
     letter-spacing: var(--tracking-tightest);
     line-height: 0.96;
     font-optical-sizing: auto;
@@ -77,7 +111,7 @@
 
   hr {
     border: 0;
-    border-top: 1px dashed var(--color-rule);
+    border-top: 1px dashed var(--color-border);
     margin: 0;
   }
 
@@ -175,8 +209,8 @@
  * ------------------------------------------------------------------ */
 
 .btn {
-  --btn-fg: var(--color-paper);
-  --btn-bg: var(--color-ink);
+  --btn-fg: var(--color-void);
+  --btn-bg: var(--color-clash);
   display: inline-flex;
   align-items: baseline;
   gap: 12px;
@@ -187,9 +221,9 @@
   font-size: 13px;
   letter-spacing: var(--tracking-wider-mono);
   text-transform: uppercase;
-  border: 1.5px solid var(--color-ink);
-  border-radius: 0;
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="none" stroke="%230b0b0b" stroke-width="1"/><path d="M11 1v20M1 11h20" stroke="%230b0b0b" stroke-width="1"/></svg>') 11 11, pointer;
+  border: 1.5px solid var(--btn-bg);
+  border-radius: 2px;
+  cursor: pointer;
   transition: transform 180ms ease, background 180ms ease, color 180ms ease;
   position: relative;
 }
@@ -200,30 +234,31 @@
   font-family: var(--font-mono);
 }
 .btn:hover {
-  --btn-bg: var(--color-safety);
-  color: var(--color-paper);
-  border-color: var(--color-safety);
+  --btn-bg: var(--color-text);
+  --btn-fg: var(--color-void);
+  transform: translateY(-1px);
 }
 .btn:active {
   transform: translateY(1px);
 }
 .btn--ghost {
-  --btn-fg: var(--color-ink);
+  --btn-fg: var(--color-text);
   --btn-bg: transparent;
+  border-color: var(--color-border-mid);
 }
 .btn--ghost:hover {
-  --btn-fg: var(--color-paper);
-  --btn-bg: var(--color-ink);
-  border-color: var(--color-ink);
+  --btn-fg: var(--color-accent);
+  --btn-bg: var(--color-panel);
+  border-color: var(--color-accent);
 }
 .btn--safety {
-  --btn-bg: var(--color-safety);
-  --btn-fg: var(--color-paper);
-  border-color: var(--color-safety);
+  --btn-bg: var(--color-clash);
+  --btn-fg: var(--color-void);
+  border-color: var(--color-clash);
 }
 .btn--safety:hover {
-  --btn-bg: var(--color-ink);
-  border-color: var(--color-ink);
+  --btn-bg: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 /* ------------------------------------------------------------------
@@ -234,38 +269,38 @@
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.7;
-  color: var(--color-ink-soft);
+  color: var(--color-text-dim);
   max-width: 68ch;
 }
 .prose h1, .prose h2, .prose h3, .prose h4 {
-  color: var(--color-ink);
+  color: var(--color-text);
   margin-top: 2.2em;
   margin-bottom: 0.6em;
 }
 .prose h1 { font-size: 2.6rem; }
-.prose h2 { font-size: 1.8rem; border-top: 1px solid var(--color-rule); padding-top: 1.2em; }
+.prose h2 { font-size: 1.8rem; border-top: 1px solid var(--color-border); padding-top: 1.2em; }
 .prose h3 { font-size: 1.25rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: var(--tracking-wider-mono); font-size: 0.85rem; }
 .prose p { margin: 1em 0; }
 .prose a {
-  color: var(--color-blueprint);
-  border-bottom: 1px dashed var(--color-blueprint);
+  color: var(--color-accent);
+  border-bottom: 1px dashed var(--color-accent-dim);
 }
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.9em;
-  background: var(--color-paper-shade);
+  background: var(--color-panel);
   padding: 1px 6px;
-  border: 1px solid var(--color-rule);
+  border: 1px solid var(--color-border);
 }
 .prose pre {
-  background: var(--color-ink);
-  color: var(--color-paper);
+  background: var(--color-void);
+  color: var(--color-text);
   padding: 20px 24px;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.65;
-  border: 1.5px solid var(--color-ink);
+  border: 1px solid var(--color-border);
 }
 .prose pre code {
   background: none;
@@ -276,9 +311,9 @@
 .prose ul, .prose ol { padding-left: 1.4em; }
 .prose li { margin: 0.4em 0; }
 .prose blockquote {
-  border-left: 3px solid var(--color-safety);
+  border-left: 3px solid var(--color-clash);
   padding-left: 16px;
-  color: var(--color-ink-soft);
+  color: var(--color-text-dim);
   font-style: italic;
 }
 
