@@ -1,0 +1,92 @@
+---
+title: MCP Tools Reference
+description: The five MCP tools this server exposes — what they do, what they take, what they return.
+order: 2
+num: "D-002"
+---
+
+The server exposes five MCP tools. Every one is stateless, typed, and returns
+JSON. Your MCP client receives the schemas automatically at connection time.
+
+## `clash_detective_list`
+
+List the clash tests defined in a Navisworks file.
+
+```json
+{
+  "filePath": "C:/models/site.nwf"
+}
+```
+
+Returns an array of test records — id, name, last-run timestamp, status counts.
+
+## `clash_detective_run`
+
+Execute a clash test. Requires the `navisworks` adapter (Windows + Navisworks).
+
+```json
+{
+  "filePath": "C:/models/site.nwf",
+  "testName": "HVAC vs STRUCT"
+}
+```
+
+Returns every individual clash with position, disciplines, affected elements,
+and status (`new`, `active`, `reviewed`, `approved`, `resolved`).
+
+## `clash_detective_export`
+
+Render an HTML report for a completed test, suitable for sharing with
+stakeholders who don't have Navisworks.
+
+```json
+{
+  "filePath": "C:/models/site.nwf",
+  "testName": "HVAC vs STRUCT",
+  "outputPath": "C:/reports/hvac-struct.html"
+}
+```
+
+## `model_review_check`
+
+Run a named Model Review rule and return the findings.
+
+```json
+{
+  "filePath": "C:/models/site.nwf",
+  "ruleName": "Pipe Penetration Clearance"
+}
+```
+
+Returns every item that violated the rule plus a short human-readable reason.
+
+## `model_items_query`
+
+Ask arbitrary property questions about the model — "all ducts above 400 mm on
+level 3", "every beam whose material is S355".
+
+```json
+{
+  "filePath": "C:/models/site.nwf",
+  "filters": [
+    { "category": "Duct", "property": "Width", "op": ">=", "value": 400 },
+    { "category": "Duct", "property": "Level", "op": "=",  "value": "L3" }
+  ]
+}
+```
+
+Returns matching elements with id, bounding box, and requested properties.
+
+## Error handling
+
+Every tool returns a well-formed MCP error when something goes wrong:
+
+- `404` — unknown file or test name
+- `409` — file opened in Navisworks UI, locked
+- `422` — schema mismatch (your client should not send malformed args)
+- `503` — Navisworks not installed (navisworks adapter only)
+
+## Versioning
+
+The tool schemas follow semver. Breaking changes bump the major version and
+land in a new MCP server release with migration notes in the GitHub changelog.

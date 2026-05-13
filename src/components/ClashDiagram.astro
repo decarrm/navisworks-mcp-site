@@ -1,0 +1,194 @@
+---
+// Isometric technical drawing of a clash between an HVAC duct and a steel beam.
+// On load, every stroke draws itself in via stroke-dashoffset staggered by CSS variables.
+// Layering reads as: grid → axes → beam (structural) → duct (MEP) → clash sphere → callouts.
+---
+
+<figure class="clash" role="img" aria-label="Isometric clash diagram showing an HVAC duct intersecting a structural steel beam at coordinates X:1240 Y:308 Z:45">
+  <div class="clash__meta mono-caps">
+    <span class="clash__tag">DWG · CL-001</span>
+    <span class="clash__tag clash__tag--safety">STATUS: ACTIVE</span>
+    <span class="clash__tag">VIEW: ISOMETRIC</span>
+  </div>
+
+  <svg class="clash__svg" viewBox="0 0 720 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <pattern id="cl-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M20 0H0V20" fill="none" stroke="rgba(11,11,11,0.08)" stroke-width="0.5" />
+      </pattern>
+      <pattern id="cl-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#0b0b0b" stroke-width="1" />
+      </pattern>
+      <marker id="cl-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#0b0b0b" />
+      </marker>
+    </defs>
+
+    <!-- Background grid -->
+    <rect x="0" y="0" width="720" height="520" fill="url(#cl-grid)" />
+
+    <!-- Isometric axes -->
+    <g class="clash__axes" stroke="#0b0b0b" stroke-width="1" fill="none">
+      <line x1="60" y1="460" x2="680" y2="460" stroke-dasharray="4 4" opacity="0.6"/>
+      <line x1="60" y1="460" x2="60" y2="40"  stroke-dasharray="4 4" opacity="0.6"/>
+      <line x1="60" y1="460" x2="360" y2="260" stroke-dasharray="4 4" opacity="0.6"/>
+      <text x="690" y="464" font-family="IBM Plex Mono, monospace" font-size="11" fill="#0b0b0b">X</text>
+      <text x="48" y="32"  font-family="IBM Plex Mono, monospace" font-size="11" fill="#0b0b0b">Z</text>
+      <text x="370" y="254" font-family="IBM Plex Mono, monospace" font-size="11" fill="#0b0b0b">Y</text>
+    </g>
+
+    <!-- STRUCTURAL BEAM (blueprint blue, running along X) -->
+    <g class="clash__beam" stroke="#1e3a8a" stroke-width="1.5" fill="none" stroke-linejoin="miter">
+      <!-- Top flange -->
+      <path d="M120 300 L560 300 L620 260 L180 260 Z" />
+      <!-- Front face -->
+      <path d="M120 300 L560 300 L560 340 L120 340 Z" fill="url(#cl-hatch)" fill-opacity="0.08" />
+      <!-- Side (iso) -->
+      <path d="M560 300 L620 260 L620 300 L560 340 Z" />
+      <!-- Web center line -->
+      <line x1="140" y1="320" x2="580" y2="320" stroke-dasharray="3 4" />
+    </g>
+
+    <!-- HVAC DUCT (orange, running along Y at an angle, passing through beam) -->
+    <g class="clash__duct" stroke="#d9531e" stroke-width="1.5" fill="none" stroke-linejoin="miter">
+      <!-- Top -->
+      <path d="M300 440 L440 340 L520 340 L380 440 Z" />
+      <!-- Left side -->
+      <path d="M300 440 L440 340 L440 300 L300 400 Z" />
+      <!-- Right/end -->
+      <path d="M440 300 L520 300 L520 340 L440 340 Z" />
+      <!-- Flange ticks -->
+      <line x1="322" y1="427" x2="322" y2="417" />
+      <line x1="500" y1="328" x2="500" y2="318" />
+    </g>
+
+    <!-- CLASH SPHERE -->
+    <g class="clash__sphere">
+      <circle cx="432" cy="322" r="28" fill="none" stroke="#d9531e" stroke-width="1.5" stroke-dasharray="3 3" />
+      <circle cx="432" cy="322" r="4"  fill="#d9531e" />
+      <line x1="412" y1="322" x2="452" y2="322" stroke="#d9531e" stroke-width="1" />
+      <line x1="432" y1="302" x2="432" y2="342" stroke="#d9531e" stroke-width="1" />
+    </g>
+
+    <!-- DIMENSION LINES -->
+    <g class="clash__dims" stroke="#0b0b0b" stroke-width="1" fill="#0b0b0b" font-family="IBM Plex Mono, monospace" font-size="10">
+      <!-- X dim (beam span) -->
+      <line x1="120" y1="496" x2="560" y2="496" marker-start="url(#cl-arrow)" marker-end="url(#cl-arrow)" />
+      <text x="340" y="490" text-anchor="middle">8 400 mm</text>
+      <line x1="120" y1="490" x2="120" y2="502" />
+      <line x1="560" y1="490" x2="560" y2="502" />
+
+      <!-- Z dim (height) -->
+      <line x1="40" y1="260" x2="40" y2="460" marker-start="url(#cl-arrow)" marker-end="url(#cl-arrow)" />
+      <text x="34" y="368" text-anchor="middle" transform="rotate(-90 34 368)">3 200 mm</text>
+    </g>
+
+    <!-- COORDINATE CALLOUT -->
+    <g class="clash__call">
+      <line x1="432" y1="322" x2="560" y2="170" stroke="#0b0b0b" stroke-width="1" />
+      <circle cx="560" cy="170" r="3" fill="#0b0b0b" />
+      <rect x="566" y="140" width="140" height="60" fill="#f1ede4" stroke="#0b0b0b" stroke-width="1" />
+      <text x="576" y="158" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b" letter-spacing="0.12em">CLASH · CL-001</text>
+      <text x="576" y="174" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b">X  1240</text>
+      <text x="576" y="188" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b">Y   308</text>
+      <text x="646" y="174" font-family="IBM Plex Mono, monospace" font-size="10" fill="#d9531e">Z    45</text>
+      <text x="646" y="188" font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b">Δ  22 mm</text>
+    </g>
+
+    <!-- ELEMENT LABELS -->
+    <g font-family="IBM Plex Mono, monospace" font-size="10" fill="#0b0b0b" letter-spacing="0.1em">
+      <text x="140" y="286" fill="#1e3a8a">W310 · STEEL BEAM</text>
+      <text x="320" y="462" fill="#d9531e">DUCT · 400 × 300</text>
+    </g>
+  </svg>
+
+  <figcaption class="mono-caps clash__caption">
+    FIG. 01 — Sample clash returned by <code>clash_detective_run</code>
+  </figcaption>
+</figure>
+
+<style>
+  .clash {
+    margin: 0;
+    border: 1.5px solid var(--color-ink);
+    background: var(--color-paper);
+    position: relative;
+  }
+  .clash__meta {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--color-ink);
+    background: var(--color-paper-shade);
+  }
+  .clash__tag {
+    padding: 8px 12px;
+    border-right: 1px solid var(--color-ink);
+    color: var(--color-ink);
+    font-size: 10px;
+  }
+  .clash__tag--safety { color: var(--color-safety); }
+  .clash__tag:last-child { border-right: 0; }
+
+  .clash__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .clash__caption {
+    padding: 10px 14px;
+    border-top: 1px solid var(--color-ink);
+    color: var(--color-ink-soft);
+    background: var(--color-paper-shade);
+  }
+  .clash__caption code {
+    font-family: var(--font-mono);
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule);
+    padding: 1px 5px;
+    font-size: 10.5px;
+    color: var(--color-blueprint);
+  }
+
+  /* Draw-in animation */
+  @keyframes clash-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes clash-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .clash__svg :is(.clash__axes, .clash__beam, .clash__duct, .clash__sphere, .clash__dims) :is(path, line, circle) {
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: clash-draw 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  }
+  .clash__svg .clash__axes * { animation-delay: 100ms; }
+  .clash__svg .clash__beam  * { animation-delay: 320ms; animation-duration: 900ms; }
+  .clash__svg .clash__duct  * { animation-delay: 700ms; animation-duration: 900ms; }
+  .clash__svg .clash__sphere * { animation-delay: 1200ms; animation-duration: 500ms; stroke-dasharray: 200; stroke-dashoffset: 200; }
+  .clash__svg .clash__dims   * { animation-delay: 1500ms; animation-duration: 700ms; stroke-dasharray: 400; stroke-dashoffset: 400; }
+
+  .clash__svg .clash__call,
+  .clash__svg .clash__axes text,
+  .clash__svg .clash__dims text,
+  .clash__svg :last-child text {
+    opacity: 0;
+    animation: clash-fade 500ms ease 1700ms forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .clash__svg :is(.clash__axes, .clash__beam, .clash__duct, .clash__sphere, .clash__dims) :is(path, line, circle) {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+    .clash__svg .clash__call,
+    .clash__svg .clash__axes text,
+    .clash__svg .clash__dims text,
+    .clash__svg :last-child text {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+title: Getting Started
+description: Install the Navisworks MCP Toolkit, wire it into your MCP client, and ask your first natural-language clash query.
+order: 1
+num: "D-001"
+---
+
+This toolkit is a local Python MCP server. You install it with `pip`, register
+it with your MCP-compatible client (Claude Code, Claude Desktop, Cursor, etc.),
+and then ask natural-language questions about your Navisworks models.
+
+## Requirements
+
+- **Python 3.10+** on any OS for mock / XML adapters
+- **Windows + Autodesk Navisworks Manage** if you want the real-COM adapter
+- An **MCP-compatible client** — Claude Code, Claude Desktop, Cursor, or any
+  tool that speaks MCP over stdio
+
+## Install
+
+```bash
+pip install navisworks-mcp
+```
+
+That installs a single command: `navisworks-mcp`. It runs a stdio server and
+exits when the client disconnects.
+
+## Register in your client
+
+Add an `mcpServers` entry to your client's config. For Claude Code this lives
+in `~/.config/claude/mcp.json` (or per-project in `.mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "navisworks": {
+      "command": "navisworks-mcp",
+      "env": {
+        "NW_MODE": "mock",
+        "NW_FILE_PATH": ""
+      }
+    }
+  }
+}
+```
+
+### Adapter modes
+
+| `NW_MODE` | When to use it | Needs Navisworks? |
+| --- | --- | --- |
+| `mock` | local dev, CI, demos | no |
+| `xml` | reading saved Clash Detective reports | no |
+| `navisworks` | driving Clash Detective on Windows | **yes** |
+
+## First query
+
+Restart your client and ask:
+
+> List the active clash tests in `site.nwf` between HVAC and structure.
+
+Your client should invoke `clash_detective_list` and return a structured JSON
+response. You're live.
+
+## Next steps
+
+- Read the [tools reference](/docs/tools) to see every MCP tool you get.
+- Join the conversation on [GitHub](https://github.com/decarrm/navisworks-mcp-toolkit).
+- Upgrade to [Studio pricing](/pricing) when you're ready to go past the free tier.

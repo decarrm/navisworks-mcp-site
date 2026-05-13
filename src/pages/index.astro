@@ -1,0 +1,515 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import ClashDiagram from "../components/ClashDiagram.astro";
+import TechnicalCard from "../components/TechnicalCard.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+import Annotation from "../components/Annotation.astro";
+
+const features = [
+  { num: "F-001", title: "Natural-Language Clash Queries", body: "Ask in plain English: “show active duct-vs-structure clashes above 20 mm.” The server translates intent into Navisworks tool calls.", meta: "CAPABILITY", icon: "query" },
+  { num: "F-002", title: "MCP Protocol Compatible", body: "Stdio transport, stateless tools. Plugs into Claude Code, Claude Desktop, Cursor, and any MCP-conformant agent.", meta: "PROTOCOL", icon: "mcp" },
+  { num: "F-003", title: "Navisworks Native", body: "Wraps Autodesk Clash Detective, Model Review, and model-item queries. Supports .nwf and .nwd sources.", meta: "INTEGRATION", icon: "navis" },
+  { num: "F-004", title: "Python MCP Server", body: "Single pip install. Runs locally over stdio — no cloud dependency, no data leaves your machine unless you want it to.", meta: "DEPLOY", icon: "python" },
+  { num: "F-005", title: "48 Passing Tests", body: "Three adapters (mock, XML, COM) covered by a deterministic test suite so you can trust returns without opening Navisworks.", meta: "QUALITY", icon: "tests" },
+  { num: "F-006", title: "Pay-as-you-Go Billing", body: "Free 100 calls/month for evaluation. Usage-based pricing from €0.01 per tool call thereafter. Cancel whenever.", meta: "BILLING", icon: "billing" },
+];
+
+const integrationCode = `# 1 — install
+pip install navisworks-mcp
+
+# 2 — register in Claude Code / Desktop (.mcp.json)
+{
+  "mcpServers": {
+    "navisworks": {
+      "command": "navisworks-mcp",
+      "env": { "NW_MODE": "navisworks", "NW_FILE_PATH": "C:/models/site.nwf" }
+    }
+  }
+}
+
+# 3 — ask in natural language
+> show active clashes on level 3 between ducts and beams
+
+⟶  clash_detective_run({ testName: "HVAC vs STRUCT", level: 3 })
+⟶  { clashes: [ { id: "CL-001", x: 1240, y: 308, z: 45, ... } ] }`;
+
+const steps = [
+  { num: "01", title: "CONFIGURE", body: "Install the Python MCP server. Point it at a .nwf or .nwd file.", ref: "~ 2 min" },
+  { num: "02", title: "CONNECT", body: "Register the server in your MCP client's config. No cloud roundtrip.", ref: "~ 30 sec" },
+  { num: "03", title: "QUERY", body: "Ask clash, review, or model questions in natural language. Get structured JSON back.", ref: "∞" },
+];
+---
+
+<BaseLayout drawing="LANDING" sheet="01">
+  <!-- ============================== HERO ============================== -->
+  <section class="sheet hero">
+    <div class="hero__meta mono-caps reveal reveal-1">
+      <span>DRAWING</span>
+      <span class="dim-rule" aria-hidden="true"></span>
+      <span class="num-read">NWX-001 · REV 02 · {new Date().getUTCFullYear()}</span>
+    </div>
+
+    <div class="hero__grid">
+      <div class="hero__lede">
+        <p class="mono-caps hero__eyebrow reveal reveal-1">
+          <span class="hero__dot" aria-hidden="true"></span>
+          MCP server · Python · MIT · Windows / macOS / Linux
+        </p>
+
+        <h1 class="hero__h reveal reveal-2">
+          Run <em>clash queries</em>
+          <span class="hero__break"></span>
+          in natural
+          <span class="hero__ital"><em>language</em><span class="cursor-blink"></span></span>
+        </h1>
+
+        <p class="hero__body reveal reveal-3">
+          No more filtering rulesets by hand or wrangling spreadsheet exports.
+          <strong>Navisworks MCP Toolkit</strong> turns any MCP-compatible AI client
+          into a co-pilot for clash detection, model review, and quantity queries —
+          straight out of your <code>.nwf</code> files.
+        </p>
+
+        <div class="hero__ctas reveal reveal-4">
+          <a class="btn" href="/pricing">Start free · 100 calls / month</a>
+          <a class="btn btn--ghost" href="/docs/getting-started">Read the docs</a>
+        </div>
+
+        <dl class="hero__stats reveal reveal-5">
+          <div>
+            <dt class="mono-caps">MCP TOOLS</dt>
+            <dd class="num-read">05</dd>
+          </div>
+          <div>
+            <dt class="mono-caps">ADAPTERS</dt>
+            <dd class="num-read">03</dd>
+          </div>
+          <div>
+            <dt class="mono-caps">TESTS</dt>
+            <dd class="num-read">48 ✓</dd>
+          </div>
+          <div>
+            <dt class="mono-caps">LATENCY p50</dt>
+            <dd class="num-read">&lt; 120 ms</dd>
+          </div>
+        </dl>
+      </div>
+
+      <aside class="hero__diagram reveal reveal-4" aria-label="Sample clash diagram">
+        <ClashDiagram />
+        <div class="hero__annos">
+          <Annotation label="FILE" value="site.nwf" />
+          <Annotation label="TEST" value="HVAC × STRUCT" tone="blueprint" />
+          <Annotation label="STATUS" value="ACTIVE" tone="safety" />
+        </div>
+      </aside>
+    </div>
+
+    <div class="tick-scale hero__ticks" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================ § 01 OVERVIEW ============================ -->
+  <section class="sheet" id="overview">
+    <SectionHeader num="01" title="A thin, honest bridge between AI agents and Autodesk Navisworks." dim="A3 · 1:50" kicker="Purpose-built for BIM coordinators, VDC engineers, and AI systems." />
+
+    <div class="overview">
+      <p class="overview__lede">
+        This toolkit runs locally as a Python MCP server. It exposes five Navisworks
+        tools — clash listing, clash execution, clash export, model review, and model-item
+        queries — over the Model Context Protocol. Any MCP-compatible client, human- or
+        agent-driven, can now drive Clash Detective and Model Review without opening
+        the desktop UI.
+      </p>
+      <ul class="overview__notes">
+        <li><span class="mono-caps">N.01</span> No data leaves your machine unless you wire an external client.</li>
+        <li><span class="mono-caps">N.02</span> Mock + XML adapters let you develop without a Navisworks license.</li>
+        <li><span class="mono-caps">N.03</span> The COM adapter drives the real Clash Detective on Windows.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ § 02 CAPABILITIES ============================ -->
+  <section class="sheet" id="capabilities">
+    <SectionHeader num="02" title="Five tools, one protocol, three deploy modes." dim="SH. 2 / 5" kicker="Every capability is a first-class MCP tool with a typed schema." />
+    <div class="capgrid">
+      {features.map((f, i) => (
+        <div class={`capgrid__cell reveal reveal-${(i % 6) + 1}`}>
+          <TechnicalCard {...f} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============================ § 03 INTEGRATION ============================ -->
+  <section class="sheet" id="integration">
+    <SectionHeader num="03" title="Wire it up in three commands." dim="1:1" kicker="Install, register, query. Stdio transport — works anywhere MCP does." />
+    <div class="integration">
+      <div class="integration__code">
+        <CodeBlock filename="terminal + .mcp.json" lang="bash" code={integrationCode} />
+      </div>
+      <aside class="integration__notes">
+        <h3 class="integration__h">Notes</h3>
+        <ul>
+          <li><strong>Stdio transport</strong> — no ports, no daemons. Your client spawns the server.</li>
+          <li><strong>NW_MODE=mock</strong> for CI, <strong>xml</strong> for saved reports, <strong>navisworks</strong> for COM.</li>
+          <li><strong>Schemas</strong> follow MCP spec v2025-09 with typed parameters and returns.</li>
+          <li>Responses are JSON — not HTML scraped from the desktop UI.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============================ § 04 WORKFLOW ============================ -->
+  <section class="sheet" id="workflow">
+    <SectionHeader num="04" title="The full loop, on one sheet." dim="ISO A3" kicker="Three steps. Each one leaves an audit trail in your MCP client's session log." />
+    <ol class="workflow">
+      {steps.map((s) => (
+        <li class="workflow__step">
+          <div class="workflow__head">
+            <span class="mono-caps workflow__num">STEP {s.num}</span>
+            <span class="mono-caps workflow__ref num-read">{s.ref}</span>
+          </div>
+          <h3 class="workflow__title">{s.title}</h3>
+          <p class="workflow__body">{s.body}</p>
+          <div class="workflow__line" aria-hidden="true"></div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ============================ § 05 PRICING TEASER ============================ -->
+  <section class="sheet" id="pricing">
+    <SectionHeader num="05" title="Priced like a part, not a SaaS." dim="PARTS MANIFEST · P-001…003" kicker="Free tier to evaluate. Metered thereafter. No seats, no tiers-shaped-like-handcuffs." />
+    <div class="ptease">
+      <div class="ptease__row">
+        <span class="mono-caps ptease__tag">[P-001] COMMUNITY</span>
+        <span class="ptease__val">Free</span>
+        <span class="mono-caps ptease__sub">100 calls / month</span>
+      </div>
+      <div class="ptease__row ptease__row--featured">
+        <span class="mono-caps ptease__tag">[P-002] STUDIO</span>
+        <span class="ptease__val num-read">€ 0.01 <span class="mono-caps ptease__unit">/ call</span></span>
+        <span class="mono-caps ptease__sub">Metered · stop any time</span>
+      </div>
+      <div class="ptease__row">
+        <span class="mono-caps ptease__tag">[P-003] ENTERPRISE</span>
+        <span class="ptease__val">Contact</span>
+        <span class="mono-caps ptease__sub">Air-gap · SSO · volume</span>
+      </div>
+      <div class="ptease__cta">
+        <a href="/pricing" class="btn btn--safety">See the full parts manifest</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* HERO */
+  .hero {
+    padding-top: 24px;
+    padding-bottom: 48px;
+    position: relative;
+  }
+  .hero__meta {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    color: var(--color-ink-soft);
+    padding: 14px 0;
+    border-top: 1px solid var(--color-rule);
+    border-bottom: 1px solid var(--color-rule);
+    margin-bottom: clamp(28px, 6vw, 56px);
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: start;
+  }
+  .hero__lede { display: grid; gap: 28px; }
+  .hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-ink-soft);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+  }
+  .hero__dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-safety);
+    box-shadow: 0 0 0 2px var(--color-paper), 0 0 0 3px var(--color-safety);
+  }
+
+  .hero__h {
+    font-size: clamp(3rem, 8vw, 6.4rem);
+    line-height: 0.92;
+    font-weight: 400;
+    max-width: 13ch;
+  }
+  .hero__h em {
+    font-style: italic;
+    font-family: var(--font-display);
+    color: var(--color-blueprint);
+    font-weight: 500;
+  }
+  .hero__break { display: block; }
+  .hero__ital em {
+    color: var(--color-safety);
+    font-weight: 500;
+  }
+
+  .hero__body {
+    font-family: var(--font-mono);
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+    max-width: 52ch;
+  }
+  .hero__body strong { color: var(--color-ink); font-weight: 600; }
+  .hero__body code {
+    background: var(--color-paper-shade);
+    border: 1px solid var(--color-rule);
+    padding: 0 5px;
+    font-size: 13px;
+    color: var(--color-blueprint);
+  }
+
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+
+  .hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--color-ink);
+    margin: 0;
+  }
+  .hero__stats > div {
+    padding: 12px 14px;
+    border-right: 1px solid var(--color-rule);
+    display: grid;
+    gap: 4px;
+  }
+  .hero__stats > div:last-child { border-right: 0; }
+  .hero__stats dt { color: var(--color-ink-soft); font-size: 9.5px; }
+  .hero__stats dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+
+  .hero__diagram { display: grid; gap: 12px; }
+  .hero__annos { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .hero__ticks { margin-top: 40px; }
+
+  @media (max-width: 960px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__stats { grid-template-columns: repeat(2, 1fr); }
+    .hero__stats > div:nth-child(2) { border-right: 0; }
+  }
+
+  /* OVERVIEW */
+  .overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+  }
+  .overview__lede {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+    line-height: 1.35;
+    font-weight: 340;
+    color: var(--color-ink);
+  }
+  .overview__notes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 14px;
+    align-self: end;
+    border-left: 1px dashed var(--color-rule);
+    padding-left: 18px;
+  }
+  .overview__notes li {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+  }
+  .overview__notes .mono-caps {
+    color: var(--color-safety);
+    margin-right: 10px;
+  }
+  @media (max-width: 860px) {
+    .overview { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  /* CAPABILITIES */
+  .capgrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1.5px solid var(--color-ink);
+    border-left: 1.5px solid var(--color-ink);
+  }
+  .capgrid__cell {
+    background: var(--color-paper);
+    border-right: 1.5px solid var(--color-ink);
+    border-bottom: 1.5px solid var(--color-ink);
+  }
+  .capgrid__cell > :global(.tcard) {
+    border: 0;
+    height: 100%;
+  }
+  @media (max-width: 960px) {
+    .capgrid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 620px) {
+    .capgrid { grid-template-columns: 1fr; }
+  }
+
+  /* INTEGRATION */
+  .integration {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 36px;
+    align-items: start;
+    padding-bottom: 64px;
+  }
+  .integration__notes {
+    border: 1.5px solid var(--color-ink);
+    padding: 22px 24px;
+    background: var(--color-paper-shade);
+  }
+  .integration__h {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-safety);
+    margin: 0 0 14px;
+  }
+  .integration__notes ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+  }
+  .integration__notes strong { color: var(--color-ink); font-weight: 600; }
+  @media (max-width: 960px) {
+    .integration { grid-template-columns: 1fr; }
+  }
+
+  /* WORKFLOW */
+  .workflow {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1.5px solid var(--color-ink);
+    border-bottom: 1.5px solid var(--color-ink);
+  }
+  .workflow__step {
+    padding: 28px 24px 32px;
+    border-right: 1px dashed var(--color-rule);
+    display: grid;
+    gap: 12px;
+    position: relative;
+  }
+  .workflow__step:last-child { border-right: 0; }
+  .workflow__head {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-ink-soft);
+  }
+  .workflow__num { color: var(--color-safety); }
+  .workflow__title {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+  }
+  .workflow__body {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--color-ink-soft);
+  }
+  .workflow__line {
+    margin-top: 12px;
+    height: 28px;
+    border-top: 1.5px solid var(--color-ink);
+    position: relative;
+  }
+  .workflow__line::before, .workflow__line::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-ink);
+  }
+  .workflow__line::before { left: 0; }
+  .workflow__line::after { right: 0; background: var(--color-safety); }
+  @media (max-width: 860px) {
+    .workflow { grid-template-columns: 1fr; }
+    .workflow__step { border-right: 0; border-bottom: 1px dashed var(--color-rule); }
+    .workflow__step:last-child { border-bottom: 0; }
+  }
+
+  /* PRICING TEASER */
+  .ptease {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--color-ink);
+  }
+  .ptease__row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1.2fr;
+    gap: 24px;
+    padding: 20px 16px;
+    align-items: baseline;
+    border-bottom: 1px solid var(--color-ink);
+    position: relative;
+  }
+  .ptease__row--featured { background: var(--color-paper-shade); }
+  .ptease__row--featured::before {
+    content: "★";
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-safety);
+    font-size: 20px;
+  }
+  .ptease__tag { color: var(--color-safety); }
+  .ptease__val {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    line-height: 1;
+  }
+  .ptease__unit { color: var(--color-ink-soft); font-size: 11px; margin-left: 4px; }
+  .ptease__sub { color: var(--color-ink-soft); justify-self: end; }
+  .ptease__cta {
+    padding: 28px 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 720px) {
+    .ptease__row { grid-template-columns: 1fr; gap: 6px; }
+    .ptease__sub { justify-self: start; }
+  }
+</style>

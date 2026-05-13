@@ -1,0 +1,114 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import { getCollection } from "astro:content";
+
+const entries = (await getCollection("docs")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Docs · Navisworks MCP Toolkit" description="Documentation for the Navisworks MCP toolkit." drawing="DOCS" sheet="03" revision="R.01">
+  <section class="sheet">
+    <div class="head">
+      <p class="mono-caps head__kicker reveal reveal-1">
+        <span class="head__dot" aria-hidden="true"></span>
+        DOCUMENTATION · SHEET 03 / 05
+      </p>
+      <h1 class="head__title reveal reveal-2">
+        Read once.
+        <span class="head__break"></span>
+        <em>Ship confidently</em>.
+      </h1>
+      <p class="head__body reveal reveal-3">
+        Short, plain-language documentation. No marketing fluff, no 20-page
+        onboarding flows. Two pages cover install and every tool.
+      </p>
+    </div>
+
+    <ul class="doclist reveal reveal-4">
+      {entries.map((e) => (
+        <li class="doclist__item">
+          <a href={`/docs/${e.id}`} class="doclist__link">
+            <span class="mono-caps doclist__num">{e.data.num}</span>
+            <div class="doclist__body">
+              <h2 class="doclist__title">{e.data.title}</h2>
+              <p class="doclist__desc">{e.data.description}</p>
+            </div>
+            <span class="doclist__arrow" aria-hidden="true">↳</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .head { padding: 40px 0 48px; max-width: 48ch; }
+  .head__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-ink-soft);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    margin-bottom: 20px;
+  }
+  .head__dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-safety);
+    box-shadow: 0 0 0 2px var(--color-paper), 0 0 0 3px var(--color-safety);
+  }
+  .head__title {
+    font-size: clamp(3rem, 7vw, 5.6rem);
+    line-height: 0.95;
+  }
+  .head__title em {
+    color: var(--color-blueprint);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .head__break { display: block; }
+  .head__body {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--color-ink-soft);
+    margin-top: 20px;
+  }
+
+  .doclist { list-style: none; padding: 0; margin: 0; border-top: 1.5px solid var(--color-ink); }
+  .doclist__item { border-bottom: 1.5px solid var(--color-ink); }
+  .doclist__link {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 28px 16px;
+    transition: background 180ms ease, color 180ms ease;
+  }
+  .doclist__num { color: var(--color-safety); }
+  .doclist__title {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    line-height: 1;
+    margin: 0 0 8px;
+  }
+  .doclist__desc {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+    margin: 0;
+    max-width: 64ch;
+  }
+  .doclist__arrow {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    color: var(--color-ink-soft);
+  }
+  .doclist__link:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .doclist__link:hover .doclist__desc { color: color-mix(in oklab, var(--color-paper) 80%, transparent); }
+  .doclist__link:hover .doclist__arrow { color: var(--color-safety); }
+  .doclist__link:hover .doclist__num { color: var(--color-safety); }
+</style>

@@ -1,0 +1,246 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import PartsManifestRow from "../components/PartsManifestRow.astro";
+
+const tiers = [
+  {
+    part: "P-001",
+    name: "Community",
+    price: "€ 0",
+    priceUnit: "forever",
+    tagline: "For evaluation, side projects, and open-source plugins.",
+    specs: [
+      { label: "Calls / month", value: "100" },
+      { label: "Adapters", value: "mock · xml · navis" },
+      { label: "Support", value: "GitHub issues" },
+      { label: "Deployment", value: "self-host" },
+    ],
+    cta: { label: "Clone on GitHub", href: "https://github.com/decarrm/navisworks-mcp-toolkit" },
+  },
+  {
+    part: "P-002",
+    name: "Studio",
+    price: "€ 0.01",
+    priceUnit: "per call · metered",
+    tagline: "Production use, billed per tool call. No seats, no minimums.",
+    specs: [
+      { label: "Calls / month", value: "unlimited" },
+      { label: "Adapters", value: "all three" },
+      { label: "Support", value: "email · 48h SLA" },
+      { label: "Deployment", value: "self-host" },
+    ],
+    cta: { label: "Start Studio", tier: "STUDIO" as const },
+    featured: true,
+  },
+  {
+    part: "P-003",
+    name: "Enterprise",
+    price: "Contact",
+    priceUnit: "volume pricing",
+    tagline: "Air-gapped sites, SSO, priority routing, and procurement-friendly terms.",
+    specs: [
+      { label: "Calls / month", value: "negotiated" },
+      { label: "Adapters", value: "all + custom" },
+      { label: "Support", value: "priority · named rep" },
+      { label: "Deployment", value: "on-prem · air-gap" },
+    ],
+    cta: { label: "Request quote", tier: "ENTERPRISE" as const },
+  },
+];
+
+const faqs = [
+  {
+    q: "How do you count a call?",
+    a: "One MCP tool invocation = one call. Listing tests, running a clash, exporting a report, querying model items — each is one call.",
+  },
+  {
+    q: "Do I need Stripe set up to develop?",
+    a: "No. The /api/checkout endpoint returns a clear 503 with a TODO until you add STRIPE_SECRET_KEY and price IDs to your environment.",
+  },
+  {
+    q: "Is there a self-hosted license?",
+    a: "Yes — the core toolkit is MIT. Studio and Enterprise add hosted routing, metering, and dashboards on top.",
+  },
+  {
+    q: "What happens if I hit 100 free calls?",
+    a: "You get a friendly 429 until next month, or upgrade to Studio mid-month and we prorate.",
+  },
+];
+---
+
+<BaseLayout
+  title="Pricing · Navisworks MCP Toolkit"
+  description="Free tier for evaluation, €0.01 per call metered thereafter, and volume pricing for enterprises. No seats, no minimums."
+  drawing="PRICING"
+  sheet="02"
+  revision="R.02"
+  scale="1 : 1"
+>
+  <section class="sheet">
+    <div class="head">
+      <p class="mono-caps head__kicker reveal reveal-1">
+        <span class="head__dot" aria-hidden="true"></span>
+        PARTS MANIFEST · P-001 → P-003
+      </p>
+      <h1 class="head__title reveal reveal-2">
+        Priced like a <em>part</em>,
+        <span class="head__break"></span>
+        not a SaaS.
+      </h1>
+      <p class="head__body reveal reveal-3">
+        One SKU per use case. Free while you evaluate. Metered once you ship.
+        Nothing tries to trick you into a bigger plan you do not need.
+      </p>
+    </div>
+
+    <div class="manifest reveal reveal-4">
+      <div class="manifest__header mono-caps">
+        <span>Part</span>
+        <span>Specs</span>
+        <span class="manifest__header-price">Price</span>
+        <span class="manifest__header-cta">Action</span>
+      </div>
+      {tiers.map((t) => <PartsManifestRow {...t} />)}
+    </div>
+
+    <p class="note mono-caps reveal reveal-5">
+      NOTE — Pricing endpoint is stubbed. Subscribe buttons POST to <code>/api/checkout</code>;
+      set <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_PRICE_ID_*</code> to enable Stripe Checkout.
+    </p>
+  </section>
+
+  <section class="sheet faq-section">
+    <SectionHeader num="06" title="Questions that usually come up." dim="FAQ · R.02" />
+    <dl class="faq">
+      {faqs.map((f, i) => (
+        <details class="faq__item" open={i === 0}>
+          <summary>
+            <span class="mono-caps faq__ref">Q.{String(i + 1).padStart(2, "0")}</span>
+            <span class="faq__q">{f.q}</span>
+            <span class="faq__plus" aria-hidden="true">+</span>
+          </summary>
+          <p class="faq__a">{f.a}</p>
+        </details>
+      ))}
+    </dl>
+  </section>
+</BaseLayout>
+
+<style>
+  .head {
+    padding: 40px 0 48px;
+    max-width: 48ch;
+  }
+  .head__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-ink-soft);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    margin-bottom: 20px;
+  }
+  .head__dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-safety);
+    box-shadow: 0 0 0 2px var(--color-paper), 0 0 0 3px var(--color-safety);
+  }
+  .head__title {
+    font-size: clamp(3rem, 7vw, 5.6rem);
+    line-height: 0.95;
+  }
+  .head__title em {
+    font-style: italic;
+    color: var(--color-safety);
+    font-weight: 500;
+  }
+  .head__break { display: block; }
+  .head__body {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--color-ink-soft);
+    margin-top: 20px;
+  }
+
+  .manifest {
+    border-top: 1.5px solid var(--color-ink);
+    border-bottom: 1.5px solid var(--color-ink);
+    margin-top: 16px;
+  }
+  .manifest__header {
+    display: grid;
+    grid-template-columns: 1.6fr 2.2fr 0.9fr 0.9fr;
+    gap: 24px;
+    padding: 12px 16px;
+    color: var(--color-ink-soft);
+    background: var(--color-paper-shade);
+    border-bottom: 1.5px solid var(--color-ink);
+    font-size: 10.5px;
+  }
+  .manifest__header-price { justify-self: end; padding-right: 8px; }
+  .manifest__header-cta { justify-self: end; padding-right: 16px; }
+
+  .manifest > :global(.pmrow:first-of-type) { border-top: 0; }
+  .manifest > :global(.pmrow:last-of-type) { border-bottom: 0; }
+
+  @media (max-width: 900px) {
+    .manifest__header { display: none; }
+  }
+
+  .note {
+    margin-top: 28px;
+    color: var(--color-ink-soft);
+    font-size: 11px;
+    line-height: 1.7;
+    letter-spacing: 0.1em;
+  }
+  .note code {
+    font-size: 11px;
+    background: var(--color-paper-shade);
+    border: 1px solid var(--color-rule);
+    padding: 1px 5px;
+    color: var(--color-blueprint);
+    letter-spacing: 0;
+  }
+
+  .faq-section { padding-top: 40px; }
+  .faq {
+    display: grid;
+    border-top: 1.5px solid var(--color-ink);
+    margin: 0;
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--color-rule);
+    padding: 18px 4px;
+  }
+  .faq__item summary {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    align-items: baseline;
+    gap: 16px;
+    list-style: none;
+  }
+  .faq__ref { color: var(--color-safety); font-size: 10.5px; }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+  .faq__plus {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    color: var(--color-ink-soft);
+    transition: transform 180ms ease;
+  }
+  .faq__item[open] .faq__plus { transform: rotate(45deg); color: var(--color-safety); }
+  .faq__a {
+    margin: 14px 0 0 60px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+    max-width: 64ch;
+  }
+</style>

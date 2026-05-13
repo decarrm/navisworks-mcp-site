@@ -1,0 +1,146 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Sheet Not Found · Navisworks MCP Toolkit" drawing="404" sheet="04" revision="R.01" noFooter={false}>
+  <section class="sheet notfound">
+    <div class="notfound__stamp hatched" aria-hidden="true"></div>
+
+    <div class="notfound__inner">
+      <p class="mono-caps notfound__kicker">
+        <span class="notfound__dot" aria-hidden="true"></span>
+        REVISION 404 · SHEET MISSING
+      </p>
+      <h1 class="notfound__h">
+        Sheet
+        <span class="notfound__ital"><em>not found</em>.</span>
+      </h1>
+      <p class="notfound__body">
+        The drawing you requested is not in the set. It may have been renamed, superseded,
+        or never plotted. Use the references below to navigate back into the project.
+      </p>
+
+      <div class="notfound__refs">
+        <a class="btn" href="/">Return to landing</a>
+        <a class="btn btn--ghost" href="/docs">Read the docs</a>
+        <a class="btn btn--ghost" href="/pricing">View pricing</a>
+      </div>
+
+      <dl class="notfound__meta mono-caps">
+        <div>
+          <dt>STATUS</dt>
+          <dd class="num-read">HTTP 404</dd>
+        </div>
+        <div>
+          <dt>ORIGIN</dt>
+          <dd class="num-read"><code>{Astro.url.pathname}</code></dd>
+        </div>
+        <div>
+          <dt>ACTION</dt>
+          <dd class="num-read">REDIRECT OR ABANDON</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    position: relative;
+    padding: clamp(64px, 10vw, 128px) 0;
+    min-height: 60vh;
+    display: grid;
+    align-items: center;
+  }
+  .notfound__stamp {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: clamp(140px, 22vw, 220px);
+    height: clamp(140px, 22vw, 220px);
+    border: 3px solid var(--color-safety);
+    border-radius: 50%;
+    background-image: repeating-linear-gradient(-45deg, var(--color-safety) 0 1px, transparent 1px 8px);
+    transform: rotate(-14deg);
+    pointer-events: none;
+  }
+  .notfound__stamp::after {
+    content: "VOID · 404";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    color: var(--color-safety);
+    font-size: clamp(18px, 2.4vw, 28px);
+    letter-spacing: 0.3em;
+    background: var(--color-paper);
+    border-radius: 50%;
+    margin: 10px;
+  }
+
+  .notfound__inner {
+    max-width: 70ch;
+    display: grid;
+    gap: 24px;
+  }
+  .notfound__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-ink-soft);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+  }
+  .notfound__dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-safety);
+    box-shadow: 0 0 0 2px var(--color-paper), 0 0 0 3px var(--color-safety);
+  }
+  .notfound__h {
+    font-size: clamp(3.4rem, 9vw, 7rem);
+    line-height: 0.92;
+  }
+  .notfound__ital em {
+    color: var(--color-safety);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .notfound__body {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--color-ink-soft);
+    max-width: 58ch;
+  }
+  .notfound__refs { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .notfound__meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--color-ink);
+    margin-top: 12px;
+  }
+  .notfound__meta > div {
+    padding: 10px 14px;
+    border-right: 1px solid var(--color-rule);
+    display: grid;
+    gap: 4px;
+  }
+  .notfound__meta > div:last-child { border-right: 0; }
+  .notfound__meta dt { color: var(--color-ink-soft); font-size: 9.5px; }
+  .notfound__meta dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+  .notfound__meta code { font-family: var(--font-mono); }
+
+  @media (max-width: 620px) {
+    .notfound__meta { grid-template-columns: 1fr; }
+    .notfound__meta > div { border-right: 0; border-bottom: 1px solid var(--color-rule); }
+    .notfound__meta > div:last-child { border-bottom: 0; }
+    .notfound__stamp { top: -30px; }
+  }
+</style>
